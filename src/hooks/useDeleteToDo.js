@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { getAllToDos } from "../api/ToDoApi";
+import { deleteToDo } from "../api/ToDoApi";
 
-let useGetToDos = () => {
+let useDeleteToDo = (id) => {
+    console.log(id)
     const [data, setData] = useState([]);
     useEffect(() => {
         // Define asynchronous function
         const fetchApi = async () => {
-            let result = await getAllToDos();
-            console.log(result, 'result')
+            let result = await deleteToDo(id);
+            console.log(result)
             setData(result);
         };
 
@@ -17,4 +18,4 @@ let useGetToDos = () => {
     return data;
 }
 
-export default useGetToDos;
+export default useDeleteToDo;

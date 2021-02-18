@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
+import { deleteToDo } from '../../../api/ToDoApi';
 
 const Item = (props) => {
+    const [isEditing, setIsEditing] = useState(false);
+
+    const deleteItemHandler = (itemId) => deleteToDo(itemId);
+
     const renderContent = (isEdit) => {
         if (isEdit) {
             return (
                 <div>
+                    {/* <input type="text" onChange={(event) => nameChangedHandler(event, props.id)} value={props.name || ''} /> */}
                     <input type="text" onChange={props.changed} value={props.name} />
                 </div>
             )
         } else {
             return (
                 <div>
-                    <input id={props.id} type="checkbox" defaultChecked={props.done} />
+                    <input id={props.id} type="checkbox" defaultChecked={props.checked} />
                     <label className="todo-label" htmlFor={props.id}>
                         {props.name}
                     </label>
@@ -25,20 +31,18 @@ const Item = (props) => {
 
             <div className="btn-group">
                 <button onClick={() => editCallback(!isEditing)} type="button" className="btn">
-                    {isEditing?'Done':'Edit'}
+                    {isEditing ? 'Done' : 'Edit'}
                 </button>
                 <button type="button" className="btn btn__danger"
-                    onClick={props.click}>
+                    onClick={() => deleteItemHandler(props.id)}>
                     Delete
                 </button>
             </div>
         )
     }
 
-    const [isEditing, setIsEditing] = useState(false);
-
     return (
-        
+
         <div>
             {renderContent(isEditing)}
             {renderButtons(setIsEditing, isEditing)}

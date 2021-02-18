@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { getAllToDos } from "../api/ToDoApi";
+import { saveAllToDos } from "../api/ToDoApi";
 
-let useGetToDos = () => {
-    const [data, setData] = useState([]);
+let useSaveToDos = (newArray) => {
+    const [data, setData] = useState(newArray);
     useEffect(() => {
         // Define asynchronous function
         const fetchApi = async () => {
-            let result = await getAllToDos();
-            console.log(result, 'result')
+            let result = await saveAllToDos(data);
             setData(result);
         };
 
@@ -17,4 +16,4 @@ let useGetToDos = () => {
     return data;
 }
 
-export default useGetToDos;
+export default useSaveToDos;

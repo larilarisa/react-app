@@ -1,5 +1,5 @@
-import React, { Component, useState } from 'react';
-import getAllToDos from '../api/ToDoApi';
+import React, { Component, useEffect, useState } from 'react';
+import getAllToDos, { saveAllToDos, updateToDo } from '../api/ToDoApi';
 import Items from '../components/Items/Items';
 import ToDo from '../components/ToDo/ToDo';
 import useGetToDos from '../hooks/useGetToDos';
@@ -19,79 +19,100 @@ import './App.css'
 // REACT HOOKS 
 const App = props => {
 
-  const [itemsState, setItemsState] = useState({
-    items: []
-  });
-  const data = useGetToDos();
+  // not used
+  // const [itemsState, setItemsState] = useState({
+  //   items: []
+  // });
+  let data = useGetToDos();
   console.log(data)
-  setItemsState({
-    items: data
-  })
-
-  // let getItems = async () => {
-  //   try {
-  //     let result = await getAllToDos();
-  //     console.log(result)
-  //     return result;
-  //   } catch (err) {
-  //     console.error(err)
-  //   }
-  // }
 
   const [showItems, setShowItems] = useState(true);
 
   const toggleItemsHandler = () => {
     const doesShow = showItems;
-    setShowItems({ showItems: !doesShow });
+    setShowItems(!doesShow);
 
   }
 
-  const nameChangedHandler = (event, id) => {
-    if (itemsState) {
-      const itemIndex = itemsState.items.findIndex(i => {
-        return i.id === id;
-      })
-      const foundItem = {
-        ...itemsState.items[itemIndex]
-      };
+  // not used --- replaced with updateToDo api
+  // const nameChangedHandler = (event, id) => {
 
-      foundItem.name = event.target.value;
-      const items = [...itemsState.items];
-      items[itemIndex] = foundItem;
-      setItemsState({ items: items });
+  //   if (data) {
+  //     const itemIndex = data.findIndex(i => {
+  //       return i.id === id;
+  //     })
+  //     const foundItem = {
+  //       ...data[itemIndex]
+  //     };
+
+  //     foundItem.name = event.target.value;   
+  //      console.log(foundItem, event.target.value)
+  //     const items = [...data];
+  //     items[itemIndex] = foundItem;
+
+  //     setItemsState({ items: items });
+  //    // console.log(items, itemsState)
+  //   }
+  // }
+
+  let edditedItemsArray = props;
+
+  const nameChangedHandler = (event, id) => {
+
+    if (edditedItemsArray && edditedItemsArray.length > 0) {
+      const itemIndex = edditedItemsArray.findIndex(i => i.id === id)
+      // const foundItem = {
+      //     ...edditedItemsArray[itemIndex]
+      // };
+
+      edditedItemsArray[itemIndex].name = event.target.value;
+      console.log(edditedItemsArray)
+      // console.log(foundItem, event.target.value)
+      // const items = [...edditedItemsArray];
+      // items[itemIndex] = foundItem;
+
+      // setItemsState({ items: items });
+      // console.log(items, itemsState)
     }
   }
 
-  const deleteItemHandler = (itemIndex) => {
-    const items = [...itemsState.items];
-    items.splice(itemIndex, 1)
-    setItemsState({ items: items })
+  const saveUpdatedItems = () => {
+    // TODO  use updateToDo
   }
 
 
   const showItemsContent = () => {
-    console.log(itemsState)
-    if (showItems && itemsState) {
+    if (showItems && data) {
       return (
         <div>
           <Items
-            items={itemsState.items}
-            clicked={deleteItemHandler}
-            chenged={nameChangedHandler} />
-
+            items={data}
+            changed={nameChangedHandler} />
         </div>
       )
     }
   }
 
+  const addNewToDoHandler = (newToDoValue) => {
+    console.log(newToDoValue);
+    if (newToDoValue.length > 0) {
+      let toDoItems = [...data, { id: data.length + 1, name: newToDoValue, done: false }];
+      saveAllToDos(toDoItems).then(() => {
+        console.log('Succes!')
+      });
+    }
+  }
+
   return (
     <div className="todoapp stack-large">
-      {/* <h1 onClick={getItems}>My TO DO List</h1> */}
+      <h1> My TO DO List</h1>
       <ToDo
-        items={itemsState.items}
+        items={data}
+        addNewToDoHandler={addNewToDoHandler}
         toggleItemsHandler={toggleItemsHandler}
       />
       {showItemsContent()}
+      <button type="button" onClick={saveUpdatedItems}>Save changes</button>
     </div>
   );
 
