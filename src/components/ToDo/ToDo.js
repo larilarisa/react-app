@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
 
+// import Jumbotron from 'react-bootstrap/Jumbotron';
+// import Container from 'react-bootstrap/Container';
+// import Button from 'react-bootstrap/Button';
+// import Alert from 'react-bootstrap/Alert';
+
 const ToDo = (props) => {
     const { addNewToDoHandler } = props;
 
@@ -15,19 +20,19 @@ const ToDo = (props) => {
 
     return (
         <div>
-            <form>
-                <h2 className="label-wrapper">
-                    <label htmlFor="new-todo-input" className="label__lg">
-                        What needs to be done?</label>
-                    <input type="text" onChange={(event) => handleInputValue(event)} id="new-todo-input" autoComplete="off" />
-                    <button type="button" className="btn" disabled={newItemValue.length < 1} onClick={addHandler}>
-                        Add</button>
-                </h2>
-            </form>
-            <h2 id="list-heading">{props.items?.filter(ii => ii.done).length} task(s) remaining</h2>
-            <button
-                onClick={() => props.toggleItemsHandler()}>Show/Hide Items</button>
 
+                    <form>
+                        <h2 className="label-wrapper">
+                            <label htmlFor="new-todo-input" className="label__lg">
+                                What needs to be done?</label>
+                            <input type="text" onChange={(event) => handleInputValue(event)} id="new-todo-input" autoComplete="off" />
+                            <button type="button" className="btn" disabled={newItemValue.length < 1} onClick={addHandler}>
+                                Add</button>
+                        </h2>
+                    </form>
+                    <h2 id="list-heading">{props.items?.filter(ii => ii.done).length} task(s) remaining</h2>
+                    <button
+                        onClick={() => props.toggleItemsHandler()}>Show/Hide Items</button>
         </div>
     )
 };

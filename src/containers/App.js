@@ -3,18 +3,7 @@ import getAllToDos, { saveAllToDos, updateToDo } from '../api/ToDoApi';
 import Items from '../components/Items/Items';
 import ToDo from '../components/ToDo/ToDo';
 import useGetToDos from '../hooks/useGetToDos';
-import './App.css'
-
-
-// class App extends Component {
-//   state = {items: [], showItems: true};
-// state = {
-//   items: [
-//     { id: 10, name: "Practice English", done: false },
-//     { id: 11, name: "Water the flowers", done: true }
-//   ],
-//   showItems: true
-// };
+import './App.scss'
 
 // REACT HOOKS 
 const App = props => {
@@ -33,27 +22,6 @@ const App = props => {
     setShowItems(!doesShow);
 
   }
-
-  // not used --- replaced with updateToDo api
-  // const nameChangedHandler = (event, id) => {
-
-  //   if (data) {
-  //     const itemIndex = data.findIndex(i => {
-  //       return i.id === id;
-  //     })
-  //     const foundItem = {
-  //       ...data[itemIndex]
-  //     };
-
-  //     foundItem.name = event.target.value;   
-  //      console.log(foundItem, event.target.value)
-  //     const items = [...data];
-  //     items[itemIndex] = foundItem;
-
-  //     setItemsState({ items: items });
-  //    // console.log(items, itemsState)
-  //   }
-  // }
 
   let edditedItemsArray = props;
 
@@ -79,7 +47,6 @@ const App = props => {
   const saveUpdatedItems = () => {
     // TODO  use updateToDo
   }
-
 
   const showItemsContent = () => {
     if (showItems && data) {
