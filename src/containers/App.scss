@@ -1,3 +1,25 @@
 .App {
   text-align: center;
 }
+
+.apps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.app1 {
+  background-color: lightcyan;
+  border: 2px black solid;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.save-btn-container {
+  padding-top: 5px;
+}
+
+.new-todo-item {
+  display: flex;
+  justify-content: space-between;
+}

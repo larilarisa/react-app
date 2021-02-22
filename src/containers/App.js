@@ -1,7 +1,7 @@
-import React, { Component, useEffect, useState } from 'react';
-import getAllToDos, { saveAllToDos, updateToDo } from '../api/ToDoApi';
-import Items from '../components/Items/Items';
-import ToDo from '../components/ToDo/ToDo';
+import React, { useState } from 'react';
+import { addNewToDo, deleteToDo, saveAllToDos } from '../api/ToDoApi';
+import ItemsList from '../components/ItemsList/ItemsList';
+import NewToDoItem from '../components/NewToDoItem/NewToDoItem';
 import useGetToDos from '../hooks/useGetToDos';
 import './App.scss'
 
@@ -12,74 +12,97 @@ const App = props => {
   // const [itemsState, setItemsState] = useState({
   //   items: []
   // });
-  let data = useGetToDos();
-  console.log(data)
+  const userMail = 'larisa.grosu@softvision.com'
+
+  let [data, setData] = useGetToDos(userMail);
 
   const [showItems, setShowItems] = useState(true);
 
   const toggleItemsHandler = () => {
     const doesShow = showItems;
     setShowItems(!doesShow);
-
   }
 
-  let edditedItemsArray = props;
+  const nameChangedHandler = (newNameValue, id) => {
+    console.log(data)
+    if (data && data.length > 0) {
+      const itemIndex = data.findIndex(i => i.id === id)
+      const foundItem = {
+        ...data[itemIndex]
+      };
+      console.log(foundItem, newNameValue)
 
-  const nameChangedHandler = (event, id) => {
+      foundItem.name = newNameValue;
+      // console.log(edditedItemsArray)
 
-    if (edditedItemsArray && edditedItemsArray.length > 0) {
-      const itemIndex = edditedItemsArray.findIndex(i => i.id === id)
-      // const foundItem = {
-      //     ...edditedItemsArray[itemIndex]
-      // };
+      const items = [...data];
+      items[itemIndex] = foundItem;
+      setData(items);
 
-      edditedItemsArray[itemIndex].name = event.target.value;
-      console.log(edditedItemsArray)
-      // console.log(foundItem, event.target.value)
-      // const items = [...edditedItemsArray];
-      // items[itemIndex] = foundItem;
-
-      // setItemsState({ items: items });
-      // console.log(items, itemsState)
     }
   }
 
   const saveUpdatedItems = () => {
+    console.log(data)
     // TODO  use updateToDo
   }
+
+  const deleteItemHandler = (itemId) => {
+    deleteToDo(itemId).then(() => {
+      console.log('Item Deleted!');
+      // setData(toDoItems);
+    })
+  };
 
   const showItemsContent = () => {
     if (showItems && data) {
       return (
         <div>
-          <Items
+          <ItemsList
             items={data}
-            changed={nameChangedHandler} />
+            changed={nameChangedHandler}
+            click={deleteItemHandler} />
         </div>
       )
-    }
+    } else return (<div><p id="list-heading">{data?.filter(ii => !(ii.done)).length} task(s) remaining</p></div>)
   }
 
   const addNewToDoHandler = (newToDoValue) => {
-    console.log(newToDoValue);
     if (newToDoValue.length > 0) {
-      let toDoItems = [...data, { id: data.length + 1, name: newToDoValue, done: false }];
-      saveAllToDos(toDoItems).then(() => {
-        console.log('Succes!')
-      });
+      // let toDoItems = [...data, { name: newToDoValue, done: false, owner: userMail }];
+      // saveAllToDos(toDoItems).then(() => {
+      //   console.log('Item Added!')
+      //   setData(toDoItems);
+      // });
+      let newToDo = { name: newToDoValue, done: false, owner: userMail };
+      addNewToDo(newToDo, userMail).then((newArray) => {
+        console.log('Succes');
+        setData(newArray);
+      })
     }
   }
 
   return (
-    <div className="todoapp stack-large">
-      <h1> My TO DO List</h1>
-      <ToDo
-        items={data}
-        addNewToDoHandler={addNewToDoHandler}
-        toggleItemsHandler={toggleItemsHandler}
-      />
-      {showItemsContent()}
-      <button type="button" onClick={saveUpdatedItems}>Save changes</button>
+    <div className='container'>
+      <h1 style={{ textAlign: 'center' }}>APPS</h1>
+      <div className="apps">
+        <div className="app1">
+          <h1> My TO DO List</h1>
+          <NewToDoItem
+            items={data}
+            addNewToDoHandler={addNewToDoHandler}
+          />
+          <button className="btn btn-link"
+            onClick={() => toggleItemsHandler()}>Show/Hide Tasks</button>
+
+          {showItemsContent()}
+
+          <div className="save-btn-container">
+            <button className="btn btn-primary" onClick={saveUpdatedItems}>Save changes</button>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 

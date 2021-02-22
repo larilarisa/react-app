@@ -7,7 +7,7 @@ const dataJSON = [
   { id: 11, name: "Water the flowers", done: true }
 ]
 
-export let getAllToDos = async () => {
+export let getAllToDos = async (userMail) => {
   // saveAllToDos(dataJSON)
   let result = new Promise((resolve, reject) => {
     let toDoArray;
@@ -74,6 +74,22 @@ export let updateToDo = async (editedItemValue) => {
         console.error('Something went wrong');
       }
     } 
+  });
+  return result;
+}
+
+export let addNewToDo = async(newToDo, userMail) => {
+  let toDoArray = await getAllToDos(userMail);
+  newToDo.id = toDoArray.length + 1;
+  toDoArray.push(newToDo);
+  let result = new Promise((resolve, reject) => {
+    try {
+      localStorage.setItem(localStorageKey, JSON.stringify(toDoArray));
+      resolve(toDoArray);
+    } catch (err) {
+      console.error('Could not save to dos', err);
+      reject(err);
+    }
   });
   return result;
 }
